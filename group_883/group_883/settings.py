@@ -49,8 +49,7 @@ INSTALLED_APPS = [
     'social_django',
     'crispy_forms',
     'django_filters',
-    'debug_toolbar',
-    'template_profiler_panel'
+    'debug_toolbar'
 ]
 
 MIDDLEWARE = [
@@ -93,20 +92,21 @@ WSGI_APPLICATION = 'group_883.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'admin',
-        'USER': 'admin',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+#DATABASES = {
+ #   'default': {
+  #      'ENGINE': 'django.db.backends.postgresql',
+  #      'NAME': 'admin',
+  #      'USER': 'admin',
+   # }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -200,21 +200,21 @@ if DEBUG:
         'SHOW_TOOLBAR_CALLBACK': show_toolbar,
     }
 
-    DEBUG_TOOLBAR_PANELS = [
-        'debug_toolbar.panels.versions.VersionsPanel',
-        'debug_toolbar.panels.timer.TimerPanel',
-        'debug_toolbar.panels.settings.SettingsPanel',
-        'debug_toolbar.panels.headers.HeadersPanel',
-        'debug_toolbar.panels.request.RequestPanel',
-        'debug_toolbar.panels.sql.SQLPanel',
-        'debug_toolbar.panels.templates.TemplatesPanel',
-        'debug_toolbar.panels.cache.CachePanel',
-        'debug_toolbar.panels.signals.SignalsPanel',
-        'debug_toolbar.panels.logging.LoggingPanel',
-        'debug_toolbar.panels.redirects.RedirectsPanel',
-        'debug_toolbar.panels.profiling.ProfilingPanel',
-        'template_profiler_panel.panels.template.TemplateProfilerPanel',
-    ]
+    #debug_toolbar_panels = [
+    #    'debug_toolbar.panels.versions.versionspanel',
+     #   'debug_toolbar.panels.timer.timerpanel',
+    #    'debug_toolbar.panels.settings.settingspanel',
+    #    'debug_toolbar.panels.headers.headerspanel',
+    #    'debug_toolbar.panels.request.requestpanel',
+    #    'debug_toolbar.panels.sql.sqlpanel',
+    #    'debug_toolbar.panels.templates.templatespanel',
+     #   'debug_toolbar.panels.cache.cachepanel',
+     #   'debug_toolbar.panels.signals.signalspanel',
+     #   'debug_toolbar.panels.logging.loggingpanel',
+     #   'debug_toolbar.panels.redirects.redirectspanel',
+     #   'debug_toolbar.panels.profiling.profilingpanel',
+     #   'template_profiler_panel.panels.template.templateprofilerpanel',
+   # ]
 
 # CACHE_MIDDLEWARE_ALIAS = 'groupproject'
 # CACHE_MIDDLEWARE_KEY_PREFIX = 'habr'
