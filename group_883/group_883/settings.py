@@ -49,7 +49,10 @@ INSTALLED_APPS = [
     'social_django',
     'crispy_forms',
     'django_filters',
-    'debug_toolbar'
+    'ckeditor',
+    'debug_toolbar',
+    'template_profiler_panel'
+
 ]
 
 MIDDLEWARE = [
@@ -103,8 +106,8 @@ DATABASES = {
 #DATABASES = {
  #   'default': {
   #      'ENGINE': 'django.db.backends.postgresql',
-  #      'NAME': 'admin',
-  #      'USER': 'admin',
+  #      'NAME': 'group_883',
+  #      'USER': 'postgres',
    # }
 #}
 
@@ -191,14 +194,14 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-if DEBUG:
-    def show_toolbar(request):
-        return True
+#if DEBUG:
+#    def show_toolbar(request):
+#        return True
 
 
-    DEBUG_TOOLBAR_CONFIG = {
-        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
-    }
+#    DEBUG_TOOLBAR_CONFIG = {
+#        'SHOW_TOOLBAR_CALLBACK': show_toolbar,
+#    }
 
     #debug_toolbar_panels = [
     #    'debug_toolbar.panels.versions.versionspanel',
