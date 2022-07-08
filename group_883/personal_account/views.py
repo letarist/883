@@ -95,6 +95,8 @@ class UserDetail(DetailView):
     context_object_name = 'current_user'
 
     def get_context_data(self, **kwargs):
+        if kwargs["object"].is_private:
+            self.template_name = 'personal_account/privat_account.html'
         context = super(UserDetail, self).get_context_data(**kwargs)
         context.update({
             'popular_tags': get_popular_tags(),
@@ -108,7 +110,7 @@ class ListArticle(ListView):
     paginate_by = 2
 
     def get_queryset(self):
-        return Article.objects.filter(user=self.request.user)
+        return Article.objects.filter(user=self.request.user).order_by('-is_active')
 
     def get_context_data(self, **kwargs):
         context = super(ListArticle, self).get_context_data(**kwargs)
@@ -303,3 +305,10 @@ class PasswordChange(PasswordChangeView):
             'popular_tags': get_popular_tags(),
         })
         return context
+
+
+def change_privat_status(request, pk):
+    _user = User.objects.get(pk=pk)
+    _user.is_private = False if _user.is_private is True else True
+    _user.save()
+    return redirect('personal_account:user')

@@ -234,6 +234,9 @@ body {
   font-weight: 300;
   color: #191E21;
   font-size: 1.4em;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6,
@@ -2122,6 +2125,7 @@ article footer .btn-primary:focus {
   left: 230px;
   top: 0;
 }
+
 
 section .container {
   padding-left: 15px;
@@ -4228,4 +4232,19 @@ blockquote {
 
 .registration_choice {
   padding-left: 0;
+}
+
+.privat{
+  min-height: 500px;
+  background-image: url('../images/privat.jpg');
+  background-repeat: no-repeat;
+  background-size: 70% 100%;
+}
+
+.container{
+  flex-grow: 1;
+}
+
+.footer{
+  flex-shrink: 0;
 }

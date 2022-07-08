@@ -3,7 +3,7 @@ from django.urls import path, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from personal_account.views import register, edit, login, logout, CreateArticle, EditArticle, ListArticle, \
     DeleteArticle, password_change_done, UserDetail, user, verify, create_permissions, delete_permissions, delete_user,\
-    PostNotification, RemoveNotification, PasswordChange
+    PostNotification, RemoveNotification, PasswordChange, change_privat_status
 
 app_name = 'personal_account'
 
@@ -12,7 +12,9 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('register/', register, name='register'),
     path('edit/<int:pk>/', edit, name='edit'),
+    path('change_state/<int:pk>/', change_privat_status, name='change_status'),
     path('our_user/<int:pk>/', UserDetail.as_view(), name='our_user'),
+
     path('user/', user, name='user'),
     path('list_article/', ListArticle.as_view(), name='list_article'),
     path('list_article/edit_article/<int:pk>/', login_required(EditArticle.as_view()), name='edit_article'),
