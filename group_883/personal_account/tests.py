@@ -41,6 +41,20 @@ class TestNotificationSmoke(TestCase):
 
         self.client = Client()
 
+    def test_login(self):
+        response = self.client.get('/')
+        self.assertEqual(response.status_code, self.status_ok)
+
+        self.assertTrue(response.context['user'].is_anonymous)
+        self.assertNotContains(response, 'Пользователь', status_code=self.status_ok)
+
+        self.client.Login(username=self.username, password=self.password)
+
+        response = self.client.get('/auth/login/')
+        self.assertFalse(response.context['user'].is_anonymous)
+        self.assertEqual(response.status_code, self.status_ok)
+        response = self.client.get('/')
+        self.assertContains(response, 'Пользователь', status_code=self.status_ok)
     def test_notification_urls(self):
         note = Notification.objects.create(notification_type=1, to_user=self.superuser,
                                            from_user=self.superuser, object_id=Article.objects.first().id,
