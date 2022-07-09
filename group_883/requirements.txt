@@ -80,3 +80,5 @@ urllib3==1.26.7
 virtualenv==20.10.0
 wcwidth==0.2.5
 wrapt==1.13.3
+
+django-ckeditor~=6.4.2
