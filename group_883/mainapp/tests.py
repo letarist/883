@@ -81,13 +81,16 @@ class TestMainappSmoke(TestCase):
             response = self.client.get(reverse('mainapp:category', kwargs={'pk': category.pk}))
             self.assertEqual(response.status_code, self.status_ok)
 
-    # def test_comment_create(self):
-    #     response = self.client.get(reverse('mainapp:article', kwargs={'pk': self.article.pk}))
-    #     self.assertEqual(response.status_code, self.status_ok)
-    #     self.assertTrue(response.context['user'].is_anonymous)
-    #
-    #     self.client.login(username=self.username, password=self.password)
-    #     self.assertFalse(response.context['user'].is_anonymous)
+    def test_comment_create(self):
+        response = self.client.get(reverse('mainapp:article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, self.status_ok)
+        self.assertTrue(response.context['user'].is_anonymous)
+
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get('/auth/login/')
+        self.assertFalse(response.context['user'].is_anonymous)
+        self.assertEqual(response.status_code, self.status_ok)
 
     # def tearDown(self) -> None:
     #     pass
