@@ -2,9 +2,11 @@ from django.test import TestCase
 from django.test.client import Client
 from mainapp.models import Category, Article, Tag, Comment
 from personal_account.models import User
+from django.urls import reverse
+from search.filters import ArticleFilter
 class TestMainappSmoke(TestCase):
     status_ok = 200
-
+    status_redirect = 302
     def setUp(self) -> None:
 
 
@@ -83,8 +85,25 @@ class TestMainappSmoke(TestCase):
         response = self.client.get('?category=&user=14&created_at__lt=&created_at__gt=')
         self.assertEqual(response.status_code, self.status_ok)
 
+    def test_article_page(self):
+        response = self.client.get('/search/?q=&page=1')
+        self.assertEqual(response.status_code, self.status_ok)
 
+        response = self.client.get('/search/?q=&page=2')
+        self.assertEqual(response.status_code, self.status_ok)
 
+        response = self.client.get('/search/?q=&page=3')
+        self.assertEqual(response.status_code, self.status_ok)
+
+    def test_search_popular(self):
+        response = self.client.get('/search/24')
+        self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get('/search/14')
+        self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get('/search/13')
+        self.assertEqual(response.status_code, self.status_ok)
 
 
 
