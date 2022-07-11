@@ -105,6 +105,9 @@ class TestMainappSmoke(TestCase):
         response = self.client.get('/search/13')
         self.assertEqual(response.status_code, self.status_ok)
 
+        response = self.client.get('/search/#')
+        self.assertEqual(response.status_code, self.status_ok)
+
 
 
 # Create your tests here.
