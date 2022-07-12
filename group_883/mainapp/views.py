@@ -238,6 +238,7 @@ def get_links_menu():
         return links_menu
     return Category.objects.filter(is_active=True)
 
+
 def get_tags():
     if settings.LOW_CACHE:
         key = 'tags'
