@@ -136,15 +136,6 @@ class TestNotificationSmoke(TestCase):
 
         self.assertEqual(Notification.objects.filter(object_id=a.id).last().notification_type, 5)
 
-from django.test import TestCase
-from django.test.client import Client
-from django.urls import reverse
-
-from django.contrib.auth.models import Group
-
-from .models import Notification, User
-from mainapp.models import Article, Tag, Category, Comment
-
 
 class TestAuthUser(TestCase):
     status_ok = 200
@@ -209,8 +200,13 @@ class TestAuthUser(TestCase):
 
         self.assertEqual(response.status_code, self.status_redirect)
 
-    def test_urls(self):
+        response = self.client.get(reverse('personal_account:password_change'))
+        self.assertEqual(response.status_code, self.status_redirect)
 
+        response = self.client.get(reverse('personal_account:password_change_done'))
+        self.assertEqual(response.status_code, self.status_redirect)
+
+    def test_urls(self):
         response = self.client.post(reverse('personal_account:user'))
 
         self.assertEqual(response.status_code, self.status_redirect)
@@ -227,3 +223,80 @@ class TestAuthUser(TestCase):
 
         response = self.client.get(reverse('personal_account:our_user', kwargs={'pk': newuser.pk, }))
         self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get(reverse('personal_account:password_change'))
+        self.assertEqual(response.status_code, self.status_ok)
+
+
+class TestListArticle(TestCase):
+    status_ok = 200
+    status_redirect = 302
+    username = 'admin'
+    password = '1234'
+    newuser = 'newuser'
+
+    def setUp(self) -> None:
+        self.category = Category.objects.create(
+            title='cat1'
+        )
+        self.tag = Tag.objects.create(
+            title='tag1'
+        )
+
+        self.superuser = User.objects.create_superuser(
+            username=self.username,
+            password=self.password,
+        )
+
+        for i in range(3):
+            Article.objects.create(
+                category=self.category,
+                user=self.superuser,
+                tag=self.tag,
+                title=f'article-{i}',
+                short_desc=f"Short desc{i}",
+                body=f"Lorem{i}",
+                moderated=1,
+            )
+
+        self.client = Client()
+
+    def test_urls(self):
+        self.client.login(username=self.username, password=self.password)
+
+        response = self.client.get(reverse('personal_account:list_article'))
+        self.assertEqual(response.status_code, self.status_ok)
+
+        article = Article.objects.first()
+
+        response = self.client.get(reverse('personal_account:edit_article', kwargs={'pk': article.pk, }))
+        self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get(reverse('personal_account:delete_article', kwargs={'pk': article.pk, }))
+        self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get(reverse('personal_account:create_article'))
+        self.assertEqual(response.status_code, self.status_ok)
+
+    def test_redirect(self):
+        response = self.client.get(reverse('personal_account:list_article'))
+        self.assertEqual(response.status_code, self.status_redirect)
+
+        article = Article.objects.first()
+
+        response = self.client.get(reverse('personal_account:edit_article', kwargs={'pk': article.pk, }))
+        self.assertEqual(response.status_code, self.status_redirect)
+
+        response = self.client.get(reverse('personal_account:delete_article', kwargs={'pk': article.pk, }))
+        self.assertEqual(response.status_code, self.status_redirect)
+
+        response = self.client.get(reverse('personal_account:create_article'))
+        self.assertEqual(response.status_code, self.status_redirect)
+
+        self.client.login(username=self.newuser, password=self.password)
+
+        response = self.client.get(reverse('personal_account:edit_article', kwargs={'pk': article.pk, }))
+        self.assertEqual(response.status_code, self.status_redirect)
+
+        response = self.client.get(reverse('personal_account:delete_article', kwargs={'pk': article.pk, }))
+        self.assertEqual(response.status_code, self.status_redirect)

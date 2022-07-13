@@ -16,7 +16,7 @@ urlpatterns = [
     path('our_user/<int:pk>/', UserDetail.as_view(), name='our_user'),
 
     path('user/', user, name='user'),
-    path('list_article/', ListArticle.as_view(), name='list_article'),
+    path('list_article/', login_required(ListArticle.as_view()), name='list_article'),
     path('list_article/edit_article/<int:pk>/', login_required(EditArticle.as_view()), name='edit_article'),
     path('list_article/delete_article/<int:pk>/', login_required(DeleteArticle.as_view()), name='delete_article'),
     path('list_article/create_article/', login_required(CreateArticle.as_view()), name='create_article'),
