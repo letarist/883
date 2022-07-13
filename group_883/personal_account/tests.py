@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 from .models import Notification, User
 from mainapp.models import Article, Tag, Category, Comment
 
-
+# Create your tests here.
 class TestAuthUser(TestCase):
     status_ok = 200
     status_redirect = 302
