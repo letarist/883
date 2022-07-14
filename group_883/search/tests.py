@@ -108,6 +108,55 @@ class TestMainappSmoke(TestCase):
         response = self.client.get('/search/#')
         self.assertEqual(response.status_code, self.status_ok)
 
+class TestArticleFromSearch(TestCase):
+    status_ok = 200
+    status_redirect = 302
+    username = 'admin'
+    password = 'admin'
+    newuser = 'newuser'
+    def setUp(self) -> None:
+        self.category = Category.objects.create(
+            title='cat1'
+        )
+        self.tag = Tag.objects.create(
+            title='tag1'
+        )
+        self.superuser = User.objects.create_superuser(
+            username=self.username,
+            password=self.password,
+        )
+        for i in range(3):
+            Article.objects.create(
+                category=self.category,
+                user=self.superuser,
+                tag=self.tag,
+                title=f'article-{i}',
+                short_desc=f"Short desc{i}",
+                body=f"Lorem{i}",
+                moderated=1
+            )
 
+        self.client = Client()
+
+    def test_search_article(self):
+        for article in Article.objects.all():
+            response = self.client.get(reverse('mainapp:article', kwargs={'pk': article.pk}))
+            self.assertEqual(response.status_code, self.status_ok)
+
+    def test_search_date(self):
+        response = self.client.get('/search/popular/?category=&user=&created_at__lt=&created_at__gt=1.07.2022')
+        self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get('/search/popular/?category=&user=&created_at__lt=&created_at__gt=5.05.2022')
+        self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get('/search/popular/?category=&user=&created_at__lt=&created_at__gt=5.05.2022')
+        self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get('/search/popular/?category=&user=&created_at__lt=&created_at__gt=25.06.2022')
+        self.assertEqual(response.status_code, self.status_ok)
+
+        response = self.client.get('/search/popular/?category=&user=&created_at__lt=&created_at__gt=1.07.2022')
+        self.assertEqual(response.status_code, self.status_ok)
 
 # Create your tests here.
