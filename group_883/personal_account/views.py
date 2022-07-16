@@ -77,7 +77,6 @@ def edit(request, pk):
         'edit_form': edit_form,
         'current_user': User.objects.get(pk=pk),
         'popular_tags': get_popular_tags(),
-
     }
     return render(request, 'personal_account/edit.html', context)
 
@@ -96,6 +95,8 @@ class UserDetail(DetailView):
     context_object_name = 'current_user'
 
     def get_context_data(self, **kwargs):
+        if kwargs["object"].is_private:
+            self.template_name = 'personal_account/privat_account.html'
         context = super(UserDetail, self).get_context_data(**kwargs)
         context.update({
             'popular_tags': get_popular_tags(),
@@ -109,7 +110,7 @@ class ListArticle(ListView):
     paginate_by = 2
 
     def get_queryset(self):
-        return Article.objects.filter(user=self.request.user)
+        return Article.objects.filter(user=self.request.user).order_by('-is_active')
 
     def get_context_data(self, **kwargs):
         context = super(ListArticle, self).get_context_data(**kwargs)
@@ -248,17 +249,6 @@ def delete_user(request, pk):
     return render(request, 'personal_account/user_delete.html')
 
 
-class PostNotification(View):
-    def get(self, request, notification_pk, article_pk, *args, **kwargs):
-        notification = Notification.objects.get(pk=notification_pk)
-        # article = Article.objects.get(pk=article_pk)
-
-        notification.user_has_seen = True
-        notification.save()
-
-        return redirect('mainapp:article', pk=article_pk)
-
-
 def block_render(request, pk):
     blocked_user = User.objects.get(pk=pk)
     context = {
@@ -287,15 +277,15 @@ def blocked(request, pk):
         return render(request, 'personal_account/block.html', context)
 
 
-class FollowNotification(View):
-    def get(self, request, notification_pk, profile_pk, *args, **kwargs):
+class PostNotification(View):
+    def get(self, request, notification_pk, article_pk, *args, **kwargs):
         notification = Notification.objects.get(pk=notification_pk)
-        profile = User.objects.get(pk=profile_pk)
+        # article = Article.objects.get(pk=article_pk)
 
         notification.user_has_seen = True
         notification.save()
 
-        return redirect('profile', pk=profile_pk)
+        return redirect('mainapp:article', pk=article_pk)
 
 
 class RemoveNotification(View):
@@ -315,3 +305,10 @@ class PasswordChange(PasswordChangeView):
             'popular_tags': get_popular_tags(),
         })
         return context
+
+
+def change_privat_status(request, pk):
+    _user = User.objects.get(pk=pk)
+    _user.is_private = False if _user.is_private is True else True
+    _user.save()
+    return redirect('personal_account:user')
